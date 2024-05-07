@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/107-systems/robotem_rovne/actions/workflows/ros2.yml/badge.svg)](https://github.com/107-systems/robotem_rovne/actions/workflows/ros2.yml)
 [![Spell Check status](https://github.com/107-systems/robotem_rovne/actions/workflows/spell-check.yml/badge.svg)](https://github.com/107-systems/robotem_rovne/actions/workflows/spell-check.yml)
 
-Control code for [T07](https://github.com/107-systems/T07) based platforms to participate at Robotem Rovne.
+Control code for [T07](https://github.com/107-systems/T07) based platforms to participate at [Robotem Rovne](https://ok1kpi.cz/registrace-na-robotem-rovne-2023-zacina-2/).
 
 #### How-to-build
 ```bash
