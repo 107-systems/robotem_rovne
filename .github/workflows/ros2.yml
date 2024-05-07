@@ -43,7 +43,7 @@ jobs:
 
     - uses: actions/checkout@v4
       with:
-        path: 'ros2_ws/src/robotem-rovne'
+        path: 'ros2_ws/src/robotem_rovne'
 
     - name: colcon build
       run: |
