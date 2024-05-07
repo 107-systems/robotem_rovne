@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 LXRobotics GmbH.
+ * Copyright (c) 2024 LXRobotics GmbH.
  * Author: Alexander Entinger <alexander.entinger@lxrobotics.com>
  * Contributors: https://github.com/107-systems/robotem_rovne/graphs/contributors.
  */
