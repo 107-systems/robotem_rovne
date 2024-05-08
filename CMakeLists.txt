@@ -11,6 +11,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(mp-units REQUIRED)
 #######################################################################################
 add_executable(${ROBOTEM_ROVNE_TARGET}
@@ -30,10 +31,9 @@ target_link_libraries(${ROBOTEM_ROVNE_TARGET}
         ${mp-units_LIBRARIES}
 )
 #######################################################################################
-ament_target_dependencies(${ROBOTEM_ROVNE_TARGET} rclcpp std_msgs)
+ament_target_dependencies(${ROBOTEM_ROVNE_TARGET} rclcpp std_msgs std_srvs)
 #######################################################################################
 install(TARGETS ${ROBOTEM_ROVNE_TARGET} DESTINATION lib/${PROJECT_NAME})
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 #######################################################################################
 ament_package()
 #######################################################################################

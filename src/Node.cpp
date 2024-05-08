@@ -24,6 +24,9 @@ namespace t07
 Node::Node()
 : rclcpp::Node("robotem_rovne_node")
 {
+  init_req_start_service_server();
+  init_req_stop_service_server();
+
   init_ctrl_loop();
 
   RCLCPP_INFO(get_logger(), "%s init complete.", get_name());
@@ -37,6 +40,28 @@ Node::~Node()
 /**************************************************************************************
  * PRIVATE MEMBER FUNCTIONS
  **************************************************************************************/
+
+void Node::init_req_start_service_server()
+{
+  _req_start_service_server = create_service<std_srvs::srv::Empty>(
+    "cmd_robot/start",
+    [this](std_srvs::srv::Empty::Request::SharedPtr /* request */,
+           std_srvs::srv::Empty::Response::SharedPtr /* response */)
+    {
+      RCLCPP_INFO(get_logger(), "start request received");
+    });
+}
+
+void Node::init_req_stop_service_server()
+{
+  _req_stop_service_server = create_service<std_srvs::srv::Empty>(
+    "cmd_robot/stop",
+    [this](std_srvs::srv::Empty::Request::SharedPtr /* request */,
+           std_srvs::srv::Empty::Response::SharedPtr /* response */)
+    {
+      RCLCPP_INFO(get_logger(), "stop request received");
+    });
+}
 
 void Node::init_ctrl_loop()
 {

@@ -19,5 +19,5 @@ colcon build --packages-select robotem_rovne
 ```bash
 cd $COLCON_WS
 . install/setup.bash
-ros2 launch robotem_rovne t07.py
+ros2 run robotem_rovne robotem_rovne_node
 ```

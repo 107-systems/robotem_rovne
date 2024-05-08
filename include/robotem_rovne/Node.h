@@ -15,7 +15,7 @@
 #include <rclcpp/qos.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-#include <std_msgs/msg/float32.hpp>
+#include <std_srvs/srv/empty.hpp>
 
 #include <mp-units/systems/si/si.h>
 #include <mp-units/systems/angular/angular.h>
@@ -45,6 +45,12 @@ public:
   ~Node();
 
 private:
+  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr _req_start_service_server;
+  void init_req_start_service_server();
+
+  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr _req_stop_service_server;
+  void init_req_stop_service_server();
+
   static std::chrono::milliseconds constexpr CTRL_LOOP_RATE{50};
   rclcpp::TimerBase::SharedPtr _ctrl_loop_timer;
   void init_ctrl_loop();
