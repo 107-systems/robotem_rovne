@@ -16,6 +16,7 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include <std_srvs/srv/empty.hpp>
+#include <robotem_rovne/srv/angular_target.hpp>
 
 #include <mp-units/systems/si/si.h>
 #include <mp-units/systems/angular/angular.h>
@@ -50,6 +51,9 @@ private:
 
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr _req_stop_service_server;
   void init_req_stop_service_server();
+
+  rclcpp::Service<robotem_rovne::srv::AngularTarget>::SharedPtr _req_set_angular_target_service_server;
+  void init_req_set_angular_target_service_server();
 
   static std::chrono::milliseconds constexpr CTRL_LOOP_RATE{50};
   rclcpp::TimerBase::SharedPtr _ctrl_loop_timer;

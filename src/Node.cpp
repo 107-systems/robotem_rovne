@@ -26,6 +26,7 @@ Node::Node()
 {
   init_req_start_service_server();
   init_req_stop_service_server();
+  init_req_set_angular_target_service_server();
 
   init_ctrl_loop();
 
@@ -60,6 +61,17 @@ void Node::init_req_stop_service_server()
            std_srvs::srv::Empty::Response::SharedPtr /* response */)
     {
       RCLCPP_INFO(get_logger(), "stop request received");
+    });
+}
+
+void Node::init_req_set_angular_target_service_server()
+{
+  _req_set_angular_target_service_server = create_service<robotem_rovne::srv::AngularTarget>(
+    "cmd_robot/set_angular_target",
+    [this](robotem_rovne::srv::AngularTarget::Request::SharedPtr request,
+           robotem_rovne::srv::AngularTarget::Response::SharedPtr /* response */)
+    {
+      RCLCPP_INFO(get_logger(), "set angular target request received: %0.2f", request->target_angle_rad);
     });
 }
 
