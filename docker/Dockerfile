@@ -35,8 +35,3 @@ WORKDIR /tmp/colcon_ws
 RUN . /opt/ros/humble/setup.sh && \
     colcon build --packages-select t07_robot pika_spark_bno085_driver
 
-COPY ./run.sh /
-RUN chmod +x /run.sh
-
-ENTRYPOINT ["/run.sh"]
-CMD ["build"]

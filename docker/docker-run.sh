@@ -7,11 +7,6 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: sudo ./docker-run.sh [build|run]"
-  exit 1
-fi
-
 CAN=can0
 CAN_BITRATE=250000
 GPIO_CAN0_STBY=160
@@ -43,4 +38,4 @@ docker run -it \
   --device /dev/spidev0.0 \
   -v /sys/class/gpio:/sys/class/gpio \
    --network host \
-   robotem_rovne_docker $1
+   robotem_rovne_docker sh
