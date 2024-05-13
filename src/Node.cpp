@@ -10,6 +10,9 @@
 
 #include <robotem_rovne/Node.h>
 
+#include <tf2/utils.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
 /**************************************************************************************
  * NAMESPACE
  **************************************************************************************/
@@ -23,10 +26,13 @@ namespace t07
 
 Node::Node()
 : rclcpp::Node("robotem_rovne_node")
+, _imu_qos_profile{rclcpp::KeepLast(10), rmw_qos_profile_sensor_data}
 {
   init_req_start_service_server();
   init_req_stop_service_server();
   init_req_set_angular_target_service_server();
+
+  init_imu_sub();
 
   init_ctrl_loop();
 
@@ -73,6 +79,55 @@ void Node::init_req_set_angular_target_service_server()
     {
       RCLCPP_INFO(get_logger(), "set angular target request received: %0.2f", request->target_angle_rad);
     });
+}
+
+void Node::init_imu_sub()
+{
+  auto const imu_topic = std::string("imu");
+  auto const imu_topic_deadline = std::chrono::milliseconds(100);
+  auto const imu_topic_liveliness_lease_duration = std::chrono::milliseconds(1000);
+
+  _imu_qos_profile.deadline(imu_topic_deadline);
+  _imu_qos_profile.liveliness(RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC);
+  _imu_qos_profile.liveliness_lease_duration(imu_topic_liveliness_lease_duration);
+
+  _imu_sub_options.event_callbacks.deadline_callback =
+    [this, imu_topic](rclcpp::QOSDeadlineRequestedInfo & event) -> void
+    {
+      RCLCPP_ERROR_THROTTLE(get_logger(), *get_clock(), 5*1000UL,
+                            "deadline missed for \"%s\" (total_count: %d, total_count_change: %d).",
+                            imu_topic.c_str(), event.total_count, event.total_count_change);
+    };
+
+  _imu_sub_options.event_callbacks.liveliness_callback =
+    [this, imu_topic](rclcpp::QOSLivelinessChangedInfo & event) -> void
+    {
+      if (event.alive_count > 0)
+      {
+        RCLCPP_INFO(get_logger(), "liveliness gained for \"%s\"", imu_topic.c_str());
+      }
+      else
+      {
+        RCLCPP_WARN(get_logger(), "liveliness lost for \"%s\"", imu_topic.c_str());
+      }
+    };
+
+  _imu_sub = create_subscription<sensor_msgs::msg::Imu>(
+    imu_topic,
+    _imu_qos_profile,
+    [this](sensor_msgs::msg::Imu::SharedPtr const msg)
+    {
+      _yaw_actual = static_cast<double>(tf2::getYaw(msg->orientation)) * rad;
+
+      RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL,
+                           "IMU Pose (theta) | (x,y,z,w): %0.2f | %0.2f %0.2f %0.2f %0.2f",
+                           _yaw_actual.numerical_value_in(deg),
+                           msg->orientation.x,
+                           msg->orientation.y,
+                           msg->orientation.z,
+                           msg->orientation.w);
+    },
+    _imu_sub_options);
 }
 
 void Node::init_ctrl_loop()

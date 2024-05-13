@@ -16,11 +16,19 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include <std_srvs/srv/empty.hpp>
+#include <sensor_msgs/msg/imu.hpp>
 #include <robotem_rovne/srv/angular_target.hpp>
+
+#include <mp-units/systems/si/si.h>
+#include <mp-units/systems/angular/angular.h>
 
 /**************************************************************************************
  * NAMESPACE
  **************************************************************************************/
+
+using namespace mp_units;
+using mp_units::angular::unit_symbols::deg;
+using mp_units::angular::unit_symbols::rad;
 
 namespace t07
 {
@@ -44,6 +52,12 @@ private:
 
   rclcpp::Service<robotem_rovne::srv::AngularTarget>::SharedPtr _req_set_angular_target_service_server;
   void init_req_set_angular_target_service_server();
+
+  rclcpp::QoS _imu_qos_profile;
+  rclcpp::SubscriptionOptions _imu_sub_options;
+  rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr _imu_sub;
+  quantity<rad> _yaw_actual;
+  void init_imu_sub();
 
   static std::chrono::milliseconds constexpr CTRL_LOOP_RATE{50};
   rclcpp::TimerBase::SharedPtr _ctrl_loop_timer;

@@ -13,6 +13,9 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 #######################################################################################
 rosidl_generate_interfaces(${ROBOTEM_ROVNE_SRV_TARGET}
@@ -37,7 +40,7 @@ target_link_libraries(${ROBOTEM_ROVNE_TARGET}
         ${cpp_typesupport_target}
 )
 #######################################################################################
-ament_target_dependencies(${ROBOTEM_ROVNE_TARGET} rclcpp std_msgs std_srvs)
+ament_target_dependencies(${ROBOTEM_ROVNE_TARGET} rclcpp std_msgs std_srvs sensor_msgs tf2 tf2_geometry_msgs)
 #######################################################################################
 ament_export_dependencies(rosidl_default_runtime)
 #######################################################################################
