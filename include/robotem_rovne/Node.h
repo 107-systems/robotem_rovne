@@ -16,6 +16,7 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include <std_srvs/srv/empty.hpp>
+#include <std_msgs/msg/float32.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <robotem_rovne/srv/angular_target.hpp>
 
@@ -54,11 +55,22 @@ private:
   quantity<rad> _yaw_target;
   void init_req_set_angular_target_service_server();
 
+
   rclcpp::QoS _imu_qos_profile;
   rclcpp::SubscriptionOptions _imu_sub_options;
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr _imu_sub;
   quantity<rad> _yaw_actual;
   void init_imu_sub();
+
+
+  rclcpp::QoS _motor_left_qos_profile;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr _motor_left_pub;
+  void init_motor_left_pub();
+
+  rclcpp::QoS _motor_right_qos_profile;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr _motor_right_pub;
+  void init_motor_right_pub();
+
 
   static std::chrono::milliseconds constexpr CTRL_LOOP_RATE{50};
   rclcpp::TimerBase::SharedPtr _ctrl_loop_timer;

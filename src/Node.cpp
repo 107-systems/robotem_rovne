@@ -27,6 +27,8 @@ namespace t07
 Node::Node()
 : rclcpp::Node("robotem_rovne_node")
 , _imu_qos_profile{rclcpp::KeepLast(10), rmw_qos_profile_sensor_data}
+, _motor_left_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
+, _motor_right_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _robot_state{State::Stopped}
 {
   init_req_start_service_server();
@@ -34,6 +36,9 @@ Node::Node()
   init_req_set_angular_target_service_server();
 
   init_imu_sub();
+
+  init_motor_left_pub();
+  init_motor_right_pub();
 
   init_ctrl_loop();
 
@@ -138,6 +143,32 @@ void Node::init_imu_sub()
                            msg->orientation.w);
     },
     _imu_sub_options);
+}
+
+void Node::init_motor_left_pub()
+{
+  auto const motor_left_topic = std::string("/motor/left/target");
+  auto const motor_left_topic_deadline = std::chrono::milliseconds(100);
+  auto const motor_left_topic_liveliness_lease_duration = std::chrono::milliseconds(1000);
+
+  _motor_left_qos_profile.deadline(motor_left_topic_deadline);
+  _motor_left_qos_profile.liveliness(RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC);
+  _motor_left_qos_profile.liveliness_lease_duration(motor_left_topic_liveliness_lease_duration);
+
+  _motor_left_pub = create_publisher<std_msgs::msg::Float32>(motor_left_topic, _motor_left_qos_profile);
+}
+
+void Node::init_motor_right_pub()
+{
+  auto const motor_right_topic = std::string("/motor/right/target");
+  auto const motor_right_topic_deadline = std::chrono::milliseconds(100);
+  auto const motor_right_topic_liveliness_lease_duration = std::chrono::milliseconds(1000);
+
+  _motor_right_qos_profile.deadline(motor_right_topic_deadline);
+  _motor_right_qos_profile.liveliness(RMW_QOS_POLICY_LIVELINESS_MANUAL_BY_TOPIC);
+  _motor_right_qos_profile.liveliness_lease_duration(motor_right_topic_liveliness_lease_duration);
+
+  _motor_right_pub = create_publisher<std_msgs::msg::Float32>(motor_right_topic, _motor_right_qos_profile);
 }
 
 void Node::init_ctrl_loop()
