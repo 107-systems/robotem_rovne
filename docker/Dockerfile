@@ -36,6 +36,7 @@ RUN mkdir -p /tmp/colcon_ws/src
 WORKDIR /tmp/colcon_ws/src
 RUN git clone --recursive https://github.com/107-systems/t07_robot
 RUN git clone --recursive https://github.com/pika-spark/pika-spark-bno085-driver
+RUN git clone https://github.com/107-systems/robotem_rovne
 
 WORKDIR /tmp/colcon_ws
 RUN . /opt/ros/humble/setup.sh && \
