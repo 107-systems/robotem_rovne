@@ -2,8 +2,6 @@
 cd /tmp/colcon_ws
 . /opt/ros/humble/setup.sh
 
-shopt -s nocasematch
-
 if [[ "$1" = "build" ]]
 then
   echo "Rebuilding package robotem_rovne ..."
@@ -19,5 +17,3 @@ then
 else
   echo "Invalid command option"
 fi
-
-shopt -u nocasematch
