@@ -1,7 +1,7 @@
 FROM docker.io/arm64v8/ros:humble-ros-base
 
 RUN apt-get update && \
-    apt-get install -y git can-utils && \
+    apt-get install -y git can-utils bash && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

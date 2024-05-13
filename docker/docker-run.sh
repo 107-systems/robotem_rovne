@@ -38,4 +38,4 @@ docker run -it \
   --device /dev/spidev0.0 \
   -v /sys/class/gpio:/sys/class/gpio \
    --network host \
-   robotem_rovne_docker sh
+   robotem_rovne_docker bash
