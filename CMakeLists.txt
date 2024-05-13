@@ -45,6 +45,7 @@ ament_target_dependencies(${ROBOTEM_ROVNE_TARGET} rclcpp std_msgs std_srvs)
 ament_export_dependencies(rosidl_default_runtime)
 #######################################################################################
 install(TARGETS ${ROBOTEM_ROVNE_TARGET} DESTINATION lib/${PROJECT_NAME})
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 #######################################################################################
 ament_package()
 #######################################################################################

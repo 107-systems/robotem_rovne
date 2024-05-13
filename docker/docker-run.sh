@@ -37,7 +37,10 @@ ifconfig $CAN txqueuelen 1000
 sudo -u fio ifconfig $CAN
 
 docker run -it \
-   -u 0 \
-   --privileged \
+  --ulimit nofile=1024:1024 \
+  --rm \
+   -u 0 --privileged \
+  --device /dev/spidev0.0 \
+  -v /sys/class/gpio:/sys/class/gpio \
    --network host \
    robotem_rovne_docker $1

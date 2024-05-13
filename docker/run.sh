@@ -8,5 +8,5 @@ colcon build --packages-select robotem_rovne
 
 cd /tmp/colcon_ws
 . install/setup.sh robotem_rovne
-#ros2 launch t07_robot t07_4wd.py &
+ros2 launch robotem_rovne all.py
 #ros2 launch pika_spark_bno085_driver imu.py &
