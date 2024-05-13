@@ -28,6 +28,8 @@
  **************************************************************************************/
 
 using namespace mp_units;
+using mp_units::si::unit_symbols::s;
+using mp_units::si::unit_symbols::m;
 using mp_units::angular::unit_symbols::deg;
 using mp_units::angular::unit_symbols::rad;
 
@@ -66,10 +68,12 @@ private:
   rclcpp::QoS _motor_left_qos_profile;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr _motor_left_pub;
   void init_motor_left_pub();
+  void pub_motor_left(quantity<m/s> const velocity);
 
   rclcpp::QoS _motor_right_qos_profile;
   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr _motor_right_pub;
   void init_motor_right_pub();
+  void pub_motor_right(quantity<m/s> const velocity);
 
 
   static std::chrono::milliseconds constexpr CTRL_LOOP_RATE{50};

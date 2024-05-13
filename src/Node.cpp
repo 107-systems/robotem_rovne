@@ -158,6 +158,13 @@ void Node::init_motor_left_pub()
   _motor_left_pub = create_publisher<std_msgs::msg::Float32>(motor_left_topic, _motor_left_qos_profile);
 }
 
+void Node::pub_motor_left(quantity<m/s> const velocity)
+{
+  std_msgs::msg::Float32 msg;
+  msg.data = velocity.numerical_value_in(m/s);
+  _motor_left_pub->publish(msg);
+}
+
 void Node::init_motor_right_pub()
 {
   auto const motor_right_topic = std::string("/motor/right/target");
@@ -169,6 +176,13 @@ void Node::init_motor_right_pub()
   _motor_right_qos_profile.liveliness_lease_duration(motor_right_topic_liveliness_lease_duration);
 
   _motor_right_pub = create_publisher<std_msgs::msg::Float32>(motor_right_topic, _motor_right_qos_profile);
+}
+
+void Node::pub_motor_right(quantity<m/s> const velocity)
+{
+  std_msgs::msg::Float32 msg;
+  msg.data = velocity.numerical_value_in(m/s);
+  _motor_right_pub->publish(msg);
 }
 
 void Node::init_ctrl_loop()
@@ -190,6 +204,9 @@ void Node::ctrl_loop()
 void Node::handle_Stopped()
 {
   RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Stopped");
+
+  pub_motor_left (0. * m/s);
+  pub_motor_right(0. * m/s);
 }
 
 void Node::handle_Starting()
