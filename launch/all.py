@@ -16,7 +16,13 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(pkg_imu, 'launch', 'imu.py'))
     )
 
+    pkg_t07_robot = get_package_share_directory('t07_robot')
+    t07_robot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_t07_robot, 'launch', 't07_4wd.py'))
+    )
+
     # Launch them all!
     return LaunchDescription([
-        imu
+        imu,
+        t07_robot
     ])
