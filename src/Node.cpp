@@ -238,7 +238,28 @@ void Node::handle_Driving()
 {
   RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Driving");
 
-  /* TODO: add control code. */
+  auto const yaw_err = (_yaw_target - _yaw_actual);
+
+  double const k = 0.01;
+  double const pid_res = k * yaw_err.numerical_value_in(deg);
+
+  _motor_left_vel  = 0.5 * m/s - pid_res * m/s;
+  _motor_left_vel = std::max(_motor_left_vel, 0.3 * m/s);
+  _motor_left_vel = std::min(_motor_left_vel, 0.7 * m/s);
+
+  _motor_right_vel = 0.5 * m/s + pid_res * m/s;
+  _motor_right_vel = std::max(_motor_right_vel, 0.3 * m/s);
+  _motor_right_vel = std::min(_motor_right_vel, 0.7 * m/s);
+
+  RCLCPP_INFO(get_logger(),
+              "actual = %0.2f, target = %0.2f, error = %0.2f, pid_res = %0.2f, LEFT = %0.2f m/s, RIGHT = %0.2f m/s",
+              _yaw_actual.numerical_value_in(deg),
+              _yaw_target.numerical_value_in(deg),
+              yaw_err.numerical_value_in(deg),
+              pid_res,
+              _motor_left_vel.numerical_value_in(m/s),
+              _motor_right_vel.numerical_value_in(m/s));
+
   pub_motor_left (_motor_left_vel);
   pub_motor_right(_motor_right_vel);
 }
