@@ -30,6 +30,8 @@ Node::Node()
 , _motor_left_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _motor_right_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _robot_state{State::Stopped}
+, _motor_left_vel{0. * m/s}
+, _motor_right_vel{0. * m/s}
 {
   init_req_start_service_server();
   init_req_stop_service_server();
@@ -205,13 +207,31 @@ void Node::handle_Stopped()
 {
   RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Stopped");
 
-  pub_motor_left (0. * m/s);
-  pub_motor_right(0. * m/s);
+  _motor_left_vel  = 0. * m/s;
+  _motor_right_vel = 0. * m/s;
+
+  pub_motor_left (_motor_left_vel);
+  pub_motor_right(_motor_right_vel);
 }
 
 void Node::handle_Starting()
 {
   RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Starting");
+
+  if (_motor_left_vel < 0.5 * m/s)
+    _motor_left_vel += 0.01 * m/s;
+  if (_motor_right_vel < 0.5 * m/s)
+    _motor_right_vel += 0.01 * m/s;
+
+  if (_motor_right_vel >= 0.5 * m/s && _motor_right_vel >= 0.5 * m/s)
+  {
+    _motor_left_vel  = 0.5 * m/s;
+    _motor_right_vel = 0.5 * m/s;
+    _robot_state = State::Driving;
+  }
+
+  pub_motor_left (_motor_left_vel);
+  pub_motor_right(_motor_right_vel);
 }
 
 void Node::handle_Driving()
@@ -222,6 +242,21 @@ void Node::handle_Driving()
 void Node::handle_Stopping()
 {
   RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Stopping");
+
+  if (_motor_left_vel > 0. * m/s)
+    _motor_left_vel -= 0.025 * m/s;
+  if (_motor_right_vel > 0. * m/s)
+    _motor_right_vel -= 0.025 * m/s;
+
+  if (_motor_right_vel <= 0. * m/s && _motor_right_vel <= 0. * m/s)
+  {
+    _motor_left_vel  = 0. * m/s;
+    _motor_right_vel = 0. * m/s;
+    _robot_state = State::Stopped;
+  }
+
+  pub_motor_left (_motor_left_vel);
+  pub_motor_right(_motor_right_vel);
 }
 
 /**************************************************************************************
