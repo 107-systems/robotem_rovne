@@ -9,7 +9,14 @@ fi
 
 CAN=can0
 CAN_BITRATE=250000
+# SYSFS_GPIO_NUMBER = ((GPIO_PORT - 1) * 32) + GPIO_PIN
 GPIO_CAN0_STBY=160
+# BNO085_nIRQ	= MX8MM_IOMUXC_SPDIF_TX_GPIO5_IO3
+# BNO085_nRST =	MX8MM_IOMUXC_SAI5_RXD1_GPIO3_IO22
+# BNO085_nBOOT = MX8MM_IOMUXC_SAI5_RXD2_GPIO3_IO23
+GPIO_NIRQ_NUM=131
+GPIO_NRST_NUM=86
+GPIO_NBOOT_NUM=87
 
 echo "Configuring $CAN for a bitrate of $CAN_BITRATE bits/s"
 
@@ -18,6 +25,10 @@ function finish
   ip link set $CAN down
   echo 1 > /sys/class/gpio/gpio$GPIO_CAN0_STBY/value
   echo $GPIO_CAN0_STBY > /sys/class/gpio/unexport
+
+  echo $GPIO_NIRQ_NUM > /sys/class/gpio/unexport
+  echo $GPIO_NRST_NUM > /sys/class/gpio/unexport
+  echo $GPIO_NBOOT_NUM > /sys/class/gpio/unexport
 }
 trap finish EXIT
 
@@ -30,6 +41,13 @@ ip link set $CAN up
 ifconfig $CAN txqueuelen 1000
 
 sudo -u fio ifconfig $CAN
+
+echo $GPIO_NIRQ_NUM > /sys/class/gpio/export
+echo $GPIO_NRST_NUM > /sys/class/gpio/export
+echo $GPIO_NBOOT_NUM > /sys/class/gpio/export
+
+modprobe spidev
+chmod ugo+rw /dev/spidev0.0
 
 docker run -it \
   --ulimit nofile=1024:1024 \
