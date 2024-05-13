@@ -237,6 +237,10 @@ void Node::handle_Starting()
 void Node::handle_Driving()
 {
   RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Driving");
+
+  /* TODO: add control code. */
+  pub_motor_left (_motor_left_vel);
+  pub_motor_right(_motor_right_vel);
 }
 
 void Node::handle_Stopping()
