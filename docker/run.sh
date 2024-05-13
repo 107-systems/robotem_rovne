@@ -14,7 +14,7 @@ then
 elif [[ "$1" = "run" ]]
 then
   echo "Starting application robotem_rovne"
-  . install/setup.sh robotem_rovne
+  . install/setup.sh
   ros2 launch robotem_rovne all.py
 else
   echo "Invalid command option"
