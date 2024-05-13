@@ -27,6 +27,7 @@ namespace t07
 Node::Node()
 : rclcpp::Node("robotem_rovne_node")
 , _imu_qos_profile{rclcpp::KeepLast(10), rmw_qos_profile_sensor_data}
+, _robot_state{State::Stopped}
 {
   init_req_start_service_server();
   init_req_stop_service_server();
@@ -56,6 +57,10 @@ void Node::init_req_start_service_server()
            std_srvs::srv::Empty::Response::SharedPtr /* response */)
     {
       RCLCPP_INFO(get_logger(), "start request received");
+      if (_robot_state == State::Stopped)
+      {
+        _robot_state = State::Starting;
+      }
     });
 }
 
@@ -67,6 +72,10 @@ void Node::init_req_stop_service_server()
            std_srvs::srv::Empty::Response::SharedPtr /* response */)
     {
       RCLCPP_INFO(get_logger(), "stop request received");
+      if (_robot_state == State::Driving)
+      {
+        _robot_state = State::Stopping;
+      }
     });
 }
 
@@ -78,6 +87,7 @@ void Node::init_req_set_angular_target_service_server()
            robotem_rovne::srv::AngularTarget::Response::SharedPtr /* response */)
     {
       RCLCPP_INFO(get_logger(), "set angular target request received: %0.2f", request->target_angle_rad);
+      _yaw_target = request->target_angle_rad * rad;
     });
 }
 
@@ -137,7 +147,33 @@ void Node::init_ctrl_loop()
 
 void Node::ctrl_loop()
 {
-  /* TODO */
+  switch (_robot_state)
+  {
+    case State::Stopped:  handle_Stopped(); break;
+    case State::Starting: handle_Starting(); break;
+    case State::Driving:  handle_Driving(); break;
+    case State::Stopping: handle_Stopping(); break;
+  }
+}
+
+void Node::handle_Stopped()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Stopped");
+}
+
+void Node::handle_Starting()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Starting");
+}
+
+void Node::handle_Driving()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Driving");
+}
+
+void Node::handle_Stopping()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Stopping");
 }
 
 /**************************************************************************************

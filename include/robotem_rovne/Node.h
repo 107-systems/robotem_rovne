@@ -51,6 +51,7 @@ private:
   void init_req_stop_service_server();
 
   rclcpp::Service<robotem_rovne::srv::AngularTarget>::SharedPtr _req_set_angular_target_service_server;
+  quantity<rad> _yaw_target;
   void init_req_set_angular_target_service_server();
 
   rclcpp::QoS _imu_qos_profile;
@@ -63,6 +64,13 @@ private:
   rclcpp::TimerBase::SharedPtr _ctrl_loop_timer;
   void init_ctrl_loop();
   void ctrl_loop();
+
+  enum class State { Stopped, Starting, Driving, Stopping };
+  State _robot_state;
+  void handle_Stopped();
+  void handle_Starting();
+  void handle_Driving();
+  void handle_Stopping();
 };
 
 /**************************************************************************************
