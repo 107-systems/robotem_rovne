@@ -18,19 +18,9 @@
 #include <std_srvs/srv/empty.hpp>
 #include <robotem_rovne/srv/angular_target.hpp>
 
-#include <mp-units/systems/si/si.h>
-#include <mp-units/systems/angular/angular.h>
-
 /**************************************************************************************
  * NAMESPACE
  **************************************************************************************/
-
-using namespace mp_units;
-using mp_units::si::unit_symbols::m;
-using mp_units::si::unit_symbols::mm;
-using mp_units::si::unit_symbols::s;
-using mp_units::angular::unit_symbols::deg;
-using mp_units::angular::unit_symbols::rad;
 
 namespace t07
 {
