@@ -83,7 +83,8 @@ private:
 
   enum class State { Stopped, Starting, Driving, Stopping };
   State _robot_state;
-  quantity<m/s> _motor_left_vel, _motor_right_vel;
+  quantity<m/s> _motor_base_vel;
+  void control_yaw();
   void handle_Stopped();
   void handle_Starting();
   void handle_Driving();

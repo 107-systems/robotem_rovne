@@ -30,8 +30,7 @@ Node::Node()
 , _motor_left_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _motor_right_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _robot_state{State::Stopped}
-, _motor_left_vel{0. * m/s}
-, _motor_right_vel{0. * m/s}
+, _motor_base_vel{0. * m/s}
 {
   init_req_start_service_server();
   init_req_stop_service_server();
@@ -203,53 +202,23 @@ void Node::ctrl_loop()
   }
 }
 
-void Node::handle_Stopped()
+void Node::control_yaw()
 {
-  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Stopped");
-
-  _motor_left_vel  = 0. * m/s;
-  _motor_right_vel = 0. * m/s;
-
-  pub_motor_left (_motor_left_vel);
-  pub_motor_right(_motor_right_vel);
-}
-
-void Node::handle_Starting()
-{
-  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Starting");
-
-  if (_motor_left_vel < 0.5 * m/s)
-    _motor_left_vel += 0.01 * m/s;
-  if (_motor_right_vel < 0.5 * m/s)
-    _motor_right_vel += 0.01 * m/s;
-
-  if (_motor_right_vel >= 0.5 * m/s && _motor_right_vel >= 0.5 * m/s)
-  {
-    _motor_left_vel  = 0.5 * m/s;
-    _motor_right_vel = 0.5 * m/s;
-    _robot_state = State::Driving;
-  }
-
-  pub_motor_left (_motor_left_vel);
-  pub_motor_right(_motor_right_vel);
-}
-
-void Node::handle_Driving()
-{
-  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Driving");
-
   auto const yaw_err = (_yaw_target - _yaw_actual);
 
   double const k = 0.01;
   double const pid_res = k * yaw_err.numerical_value_in(deg);
 
-  _motor_left_vel  = 0.5 * m/s - pid_res * m/s;
-  _motor_left_vel = std::max(_motor_left_vel, 0.3 * m/s);
-  _motor_left_vel = std::min(_motor_left_vel, 0.7 * m/s);
+  auto const motor_vel_lower_limit = _motor_base_vel - 0.2 * m/s;
+  auto const motor_vel_upper_limit = _motor_base_vel + 0.2 * m/s;
 
-  _motor_right_vel = 0.5 * m/s + pid_res * m/s;
-  _motor_right_vel = std::max(_motor_right_vel, 0.3 * m/s);
-  _motor_right_vel = std::min(_motor_right_vel, 0.7 * m/s);
+  auto motor_left_vel  = _motor_base_vel - pid_res * m/s;
+  motor_left_vel = std::max(motor_left_vel, motor_vel_lower_limit);
+  motor_left_vel = std::min(motor_left_vel, motor_vel_upper_limit);
+
+  auto motor_right_vel = _motor_base_vel + pid_res * m/s;
+  motor_right_vel = std::max(motor_right_vel, motor_vel_lower_limit);
+  motor_right_vel = std::min(motor_right_vel, motor_vel_upper_limit);
 
   RCLCPP_INFO(get_logger(),
               "actual = %0.2f, target = %0.2f, error = %0.2f, pid_res = %0.2f, LEFT = %0.2f m/s, RIGHT = %0.2f m/s",
@@ -257,31 +226,62 @@ void Node::handle_Driving()
               _yaw_target.numerical_value_in(deg),
               yaw_err.numerical_value_in(deg),
               pid_res,
-              _motor_left_vel.numerical_value_in(m/s),
-              _motor_right_vel.numerical_value_in(m/s));
+              motor_left_vel.numerical_value_in(m/s),
+              motor_right_vel.numerical_value_in(m/s));
 
-  pub_motor_left (_motor_left_vel);
-  pub_motor_right(_motor_right_vel);
+  pub_motor_left (motor_left_vel);
+  pub_motor_right(motor_right_vel);
+}
+
+void Node::handle_Stopped()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "State::Stopped");
+
+  _motor_base_vel = 0. * m/s;
+
+  pub_motor_left (0. * m/s);
+  pub_motor_right(0. * m/s);
+}
+
+void Node::handle_Starting()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "State::Starting");
+
+  control_yaw();
+
+  if (_motor_base_vel < 0.5 * m/s)
+  {
+    _motor_base_vel += 0.01 * m/s;
+  }
+  else
+  {
+    _motor_base_vel  = 0.5 * m/s;
+    _robot_state = State::Driving;
+  }
+}
+
+void Node::handle_Driving()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "State::Driving");
+
+  control_yaw();
 }
 
 void Node::handle_Stopping()
 {
-  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "handle_Stopping");
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "State::Stopping");
 
-  if (_motor_left_vel > 0. * m/s)
-    _motor_left_vel -= 0.025 * m/s;
-  if (_motor_right_vel > 0. * m/s)
-    _motor_right_vel -= 0.025 * m/s;
+  control_yaw();
 
-  if (_motor_right_vel <= 0. * m/s && _motor_right_vel <= 0. * m/s)
+  if (_motor_base_vel > 0. * m/s)
   {
-    _motor_left_vel  = 0. * m/s;
-    _motor_right_vel = 0. * m/s;
+    _motor_base_vel -= 0.025 * m/s;
+  }
+  else
+  {
+    _motor_base_vel  = 0. * m/s;
     _robot_state = State::Stopped;
   }
-
-  pub_motor_left (_motor_left_vel);
-  pub_motor_right(_motor_right_vel);
 }
 
 /**************************************************************************************
