@@ -52,8 +52,8 @@ chmod ugo+rw /dev/spidev0.0
 docker run -it \
   --ulimit nofile=1024:1024 \
   --rm \
-   -u 0 --privileged \
+  -u 0 --privileged \
   --device /dev/spidev0.0 \
   -v /sys/class/gpio:/sys/class/gpio \
-   --network host \
-   robotem_rovne_docker bash
+  --network host \
+  robotem_rovne_docker bash
