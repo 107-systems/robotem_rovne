@@ -24,6 +24,8 @@ rosidl_generate_interfaces(${ROBOTEM_ROVNE_SRV_TARGET}
 #######################################################################################
 rosidl_get_typesupport_target(cpp_typesupport_target ${ROBOTEM_ROVNE_SRV_TARGET} "rosidl_typesupport_cpp")
 #######################################################################################
+add_subdirectory(external/mp-units/src)
+#######################################################################################
 add_executable(${ROBOTEM_ROVNE_TARGET}
   src/Node.cpp
   src/main.cpp
