@@ -99,7 +99,7 @@ void Node::init_req_set_angular_target_service_server()
 
 void Node::init_imu_sub()
 {
-  auto const imu_topic = std::string("imu");
+  auto const imu_topic = std::string("/imu");
   auto const imu_topic_deadline = std::chrono::milliseconds(100);
   auto const imu_topic_liveliness_lease_duration = std::chrono::milliseconds(1000);
 
