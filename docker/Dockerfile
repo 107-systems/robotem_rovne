@@ -40,5 +40,5 @@ RUN git clone --recursive https://github.com/107-systems/robotem_rovne
 
 WORKDIR /tmp/colcon_ws
 RUN . /opt/ros/humble/setup.sh && \
-    colcon build --packages-select t07_robot pika_spark_bno085_driver
+    colcon build --packages-select t07_robot pika_spark_bno085_driver robotem_rovne
 
