@@ -196,6 +196,7 @@ void Node::ctrl_loop()
   switch (_robot_state)
   {
     case State::Stopped:  handle_Stopped(); break;
+    case State::Orienting: handle_Orienting(); break;
     case State::Starting: handle_Starting(); break;
     case State::Driving:  handle_Driving(); break;
     case State::Stopping: handle_Stopping(); break;
@@ -241,6 +242,19 @@ void Node::handle_Stopped()
 
   pub_motor_left (0. * m/s);
   pub_motor_right(0. * m/s);
+}
+
+void Node::handle_Orienting()
+{
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL, "State::Orienting");
+
+  _motor_base_vel = 0. * m/s;
+
+  control_yaw();
+
+  auto const yaw_err = (_yaw_target - _yaw_actual);
+  if ( yaw_err < (-5. * deg).in(rad) && yaw_err < (5. * deg).in(rad))
+    _robot_state = State::Starting;
 }
 
 void Node::handle_Starting()

@@ -81,11 +81,12 @@ private:
   void init_ctrl_loop();
   void ctrl_loop();
 
-  enum class State { Stopped, Starting, Driving, Stopping };
+  enum class State { Stopped, Orienting, Starting, Driving, Stopping };
   State _robot_state;
   quantity<m/s> _motor_base_vel;
   void control_yaw();
   void handle_Stopped();
+  void handle_Orienting();
   void handle_Starting();
   void handle_Driving();
   void handle_Stopping();
