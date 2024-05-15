@@ -27,8 +27,15 @@ RUN git clone https://github.com/fmtlib/fmt && cd fmt && \
 
 RUN mkdir -p /tmp/colcon_ws/src
 WORKDIR /tmp/colcon_ws/src
-RUN git clone --recursive https://github.com/107-systems/t07_robot
-RUN git clone --recursive https://github.com/pika-spark/pika-spark-bno085-driver
+
+RUN git clone --recursive https://github.com/107-systems/t07_robot && \
+    cd t07_robot && \
+    git checkout robotem-rovne
+
+RUN git clone --recursive https://github.com/pika-spark/pika-spark-bno085-driver && \
+    cd pika-spark-bno085-driver && \
+    git checkout robotem-rovne
+
 RUN git clone --recursive https://github.com/107-systems/robotem_rovne
 
 WORKDIR /tmp/colcon_ws
