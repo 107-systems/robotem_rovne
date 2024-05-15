@@ -40,6 +40,7 @@ target_compile_features(${ROBOTEM_ROVNE_TARGET} PRIVATE cxx_std_20)
 target_link_libraries(${ROBOTEM_ROVNE_TARGET}
         ${rclcpp_LIBRARIES}
         ${cpp_typesupport_target}
+        mp-units::mp-units
 )
 #######################################################################################
 ament_target_dependencies(${ROBOTEM_ROVNE_TARGET} rclcpp std_msgs std_srvs sensor_msgs tf2 tf2_geometry_msgs)
