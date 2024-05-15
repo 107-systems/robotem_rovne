@@ -213,11 +213,11 @@ void Node::control_yaw()
   auto const motor_vel_lower_limit = _motor_base_vel - 0.2 * m/s;
   auto const motor_vel_upper_limit = _motor_base_vel + 0.2 * m/s;
 
-  auto motor_left_vel  = _motor_base_vel - pid_res * m/s;
+  auto motor_left_vel  = _motor_base_vel + pid_res * m/s;
   motor_left_vel = std::max(motor_left_vel, motor_vel_lower_limit);
   motor_left_vel = std::min(motor_left_vel, motor_vel_upper_limit);
 
-  auto motor_right_vel = _motor_base_vel + pid_res * m/s;
+  auto motor_right_vel = _motor_base_vel - pid_res * m/s;
   motor_right_vel = std::max(motor_right_vel, motor_vel_lower_limit);
   motor_right_vel = std::min(motor_right_vel, motor_vel_upper_limit);
 
