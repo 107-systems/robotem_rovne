@@ -21,8 +21,20 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(pkg_t07_robot, 'launch', 't07_4wd.py'))
     )
 
+    robotem_rovne_node = Node(
+        package='robotem_rovne',
+        executable='robotem_rovne_node',
+        name='robotem_rovne',
+        namespace='t07',
+        output='screen',
+        emulate_tty=True,
+        parameters=[
+        ]
+    )
+
     # Launch them all!
     return LaunchDescription([
         imu,
-        t07_robot
+        t07_robot,
+        robotem_rovne_node
     ])
