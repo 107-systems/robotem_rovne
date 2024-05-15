@@ -78,7 +78,7 @@ void Node::init_req_stop_service_server()
            std_srvs::srv::Empty::Response::SharedPtr /* response */)
     {
       RCLCPP_INFO(get_logger(), "stop request received");
-      if (_robot_state == State::Driving)
+      if (_robot_state != State::Stopped)
       {
         _robot_state = State::Stopping;
       }
