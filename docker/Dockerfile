@@ -10,15 +10,6 @@ RUN apt-get update && \
     freeglut3-dev \
     libeigen3-dev \
     libglu1-mesa-dev \
-    libxcb-xinerama0 \
-    libfontconfig1-dev \
-    libxcb-xkb-dev \
-    libxkbcommon-x11-dev \
-    libxkbcommon-dev \
-    libxcb-xfixes0-dev \
-    libxcb-xinput-dev \
-    libxcb-xinput0 \
-    libpcre2-16-0 \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -56,7 +47,9 @@ RUN git clone https://github.com/nlohmann/json && cd json && \
 RUN mkdir -p /tmp/colcon_ws/src
 WORKDIR /tmp/colcon_ws/src
 
-RUN git clone https://github.com/michalpelka/msas_enrich_2023
+RUN git clone https://github.com/aentinger/msas_enrich_2023 && \
+    cd msas_enrich_2023 && \
+    git checkout elrob24
 
 RUN git clone --recursive https://github.com/107-systems/t07_robot && \
     cd t07_robot && \
