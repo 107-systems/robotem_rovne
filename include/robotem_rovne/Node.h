@@ -59,14 +59,15 @@ private:
   void init_req_set_angular_target_service_server();
 
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr _cmd_vel_sub;
-  quantity<m/s> _linear_vel;
-  quantity<rad/s> _angular_vel;
+  quantity<m/s> _linear_vel_target;
+  quantity<rad/s> _yaw_angular_vel_target;
   void init_cmd_vel_sub();
 
   rclcpp::QoS _imu_qos_profile;
   rclcpp::SubscriptionOptions _imu_sub_options;
   rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr _imu_sub;
   quantity<rad> _yaw_actual;
+  quantity<rad/s> _yaw_angular_vel_actual;
   void init_imu_sub();
 
 

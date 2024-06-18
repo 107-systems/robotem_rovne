@@ -26,9 +26,10 @@ namespace t07
 
 Node::Node()
 : rclcpp::Node("robotem_rovne_node")
-, _linear_vel{0. * m/s}
-, _angular_vel{0. * rad/s}
+, _linear_vel_target{0. * m/s}
+, _yaw_angular_vel_target{0. * rad/s}
 , _imu_qos_profile{rclcpp::KeepLast(10), rmw_qos_profile_sensor_data}
+, _yaw_angular_vel_actual{0. * rad/s}
 , _motor_left_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _motor_right_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _robot_state{State::Stopped}
@@ -107,13 +108,13 @@ void Node::init_cmd_vel_sub()
     1,
     [this](geometry_msgs::msg::Twist::SharedPtr const msg)
     {
-      _linear_vel = static_cast<double>(msg->linear.x) * m/s;
-      _angular_vel = static_cast<double>(msg->angular.z) * rad/s;
+      _linear_vel_target = static_cast<double>(msg->linear.x) * m/s;
+      _yaw_angular_vel_target = static_cast<double>(msg->angular.z) * rad/s;
 
       RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL,
                            "linear_vel = %0.2f m/s, angular_vel = %0.2f",
-                           _linear_vel.numerical_value_in(m/s),
-                           _angular_vel.numerical_value_in(deg/s));
+                           _linear_vel_target.numerical_value_in(m/s),
+                           _yaw_angular_vel_target.numerical_value_in(deg/s));
     });
 }
 
@@ -130,6 +131,7 @@ void Node::init_imu_sub()
   _imu_sub_options.event_callbacks.deadline_callback =
     [this, imu_topic](rclcpp::QOSDeadlineRequestedInfo & event) -> void
     {
+      _yaw_angular_vel_actual = 0. * rad/s;
       RCLCPP_ERROR_THROTTLE(get_logger(), *get_clock(), 5*1000UL,
                             "deadline missed for \"%s\" (total_count: %d, total_count_change: %d).",
                             imu_topic.c_str(), event.total_count, event.total_count_change);
@@ -144,6 +146,7 @@ void Node::init_imu_sub()
       }
       else
       {
+        _yaw_angular_vel_actual = 0. * rad/s;
         RCLCPP_WARN(get_logger(), "liveliness lost for \"%s\"", imu_topic.c_str());
       }
     };
@@ -154,10 +157,12 @@ void Node::init_imu_sub()
     [this](sensor_msgs::msg::Imu::SharedPtr const msg)
     {
       _yaw_actual = static_cast<double>(tf2::getYaw(msg->orientation)) * rad;
+      _yaw_angular_vel_actual = static_cast<double>(msg->angular_velocity.z) * rad/s;
 
       RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL,
-                           "IMU Pose (theta) | (x,y,z,w): %0.2f | %0.2f %0.2f %0.2f %0.2f",
+                           "IMU Pose (theta) | (theta_vel) | (x,y,z,w): %0.2f | %0.2f | %0.2f %0.2f %0.2f %0.2f",
                            _yaw_actual.numerical_value_in(deg),
+                           _yaw_angular_vel_actual.numerical_value_in(deg/s),
                            msg->orientation.x,
                            msg->orientation.y,
                            msg->orientation.z,
