@@ -26,6 +26,8 @@ namespace t07
 
 Node::Node()
 : rclcpp::Node("robotem_rovne_node")
+, _linear_vel{0. * m/s}
+, _angular_vel{0. * rad/s}
 , _imu_qos_profile{rclcpp::KeepLast(10), rmw_qos_profile_sensor_data}
 , _motor_left_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
 , _motor_right_qos_profile{rclcpp::KeepLast(1), rmw_qos_profile_sensor_data}
@@ -36,6 +38,7 @@ Node::Node()
   init_req_stop_service_server();
   init_req_set_angular_target_service_server();
 
+  init_cmd_vel_sub();
   init_imu_sub();
 
   init_motor_left_pub();
@@ -94,6 +97,23 @@ void Node::init_req_set_angular_target_service_server()
     {
       RCLCPP_INFO(get_logger(), "set angular target request received: %0.2f", request->target_angle_rad);
       _yaw_target = request->target_angle_rad * rad;
+    });
+}
+
+void Node::init_cmd_vel_sub()
+{
+  _cmd_vel_sub = create_subscription<geometry_msgs::msg::Twist>(
+    "cmd_vel",
+    1,
+    [this](geometry_msgs::msg::Twist::SharedPtr const msg)
+    {
+      _linear_vel = static_cast<double>(msg->linear.x) * m/s;
+      _angular_vel = static_cast<double>(msg->angular.z) * rad/s;
+
+      RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000UL,
+                           "linear_vel = %0.2f m/s, angular_vel = %0.2f",
+                           _linear_vel.numerical_value_in(m/s),
+                           _angular_vel.numerical_value_in(deg/s));
     });
 }
 

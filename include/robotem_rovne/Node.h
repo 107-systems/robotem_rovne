@@ -18,6 +18,7 @@
 #include <std_srvs/srv/empty.hpp>
 #include <std_msgs/msg/float32.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#include <geometry_msgs/msg/twist.hpp>
 #include <robotem_rovne/srv/angular_target.hpp>
 
 #include <mp-units/systems/si/si.h>
@@ -57,6 +58,10 @@ private:
   quantity<rad> _yaw_target;
   void init_req_set_angular_target_service_server();
 
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr _cmd_vel_sub;
+  quantity<m/s> _linear_vel;
+  quantity<rad/s> _angular_vel;
+  void init_cmd_vel_sub();
 
   rclcpp::QoS _imu_qos_profile;
   rclcpp::SubscriptionOptions _imu_sub_options;
