@@ -15,11 +15,9 @@
 #include <rclcpp/qos.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-#include <std_srvs/srv/empty.hpp>
 #include <std_msgs/msg/float32.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <geometry_msgs/msg/twist.hpp>
-#include <robotem_rovne/srv/angular_target.hpp>
 
 #include <mp-units/systems/si/si.h>
 #include <mp-units/systems/angular/angular.h>
@@ -48,16 +46,6 @@ public:
   ~Node();
 
 private:
-  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr _req_start_service_server;
-  void init_req_start_service_server();
-
-  rclcpp::Service<std_srvs::srv::Empty>::SharedPtr _req_stop_service_server;
-  void init_req_stop_service_server();
-
-  rclcpp::Service<robotem_rovne::srv::AngularTarget>::SharedPtr _req_set_angular_target_service_server;
-  quantity<rad> _yaw_target;
-  void init_req_set_angular_target_service_server();
-
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr _cmd_vel_sub;
   quantity<m/s> _linear_vel_target;
   quantity<rad/s> _yaw_angular_vel_target;
@@ -86,16 +74,6 @@ private:
   rclcpp::TimerBase::SharedPtr _ctrl_loop_timer;
   void init_ctrl_loop();
   void ctrl_loop();
-
-  enum class State { Stopped, Orienting, Starting, Driving, Stopping };
-  State _robot_state;
-  quantity<m/s> _motor_base_vel;
-  void control_yaw();
-  void handle_Stopped();
-  void handle_Orienting();
-  void handle_Starting();
-  void handle_Driving();
-  void handle_Stopping();
 };
 
 /**************************************************************************************
