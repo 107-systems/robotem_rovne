@@ -174,7 +174,7 @@ void Node::ctrl_loop()
 
   auto const yaw_angular_vel_error = (_yaw_angular_vel_target - _yaw_angular_vel_actual);
 
-  double const k = 0.01;
+  double const k = 0.1;
   double const pid_res = k * yaw_angular_vel_error.numerical_value_in(deg/s);
 
   auto const motor_vel_lower_limit = motor_base_vel - 0.2 * m/s;
