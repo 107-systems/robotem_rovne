@@ -23,3 +23,8 @@ ros2 run robotem_rovne robotem_rovne_node
 # or
 ros2 launch robotem_rovne all.py
 ```
+
+#### How-to-teleop
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap /cmd_vel:=/t07/cmd_vel
+```
