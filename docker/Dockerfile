@@ -18,8 +18,8 @@ RUN apt-get update && \
 
 WORKDIR /opt
 
-RUN git clone --recursive --depth 1 https://github.com/aentinger/Livox-SDK --branch elrob24 && \
-    mkdir -p Livox-SDK/build && cd Livox-SDK/build && \
+RUN git clone --recursive --depth 1 https://github.com/Livox-SDK/Livox-SDK2.git && \
+    mkdir -p Livox-SDK2/build && cd Livox-SDK2/build && \
     cmake .. && make install
 
 RUN git clone --recursive --depth 1 https://github.com/gsl-lite/gsl-lite --branch v0.40.0 && \
