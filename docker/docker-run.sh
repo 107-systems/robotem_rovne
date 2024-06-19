@@ -55,5 +55,6 @@ docker run -it \
   -u 0 --privileged \
   --device /dev/spidev0.0 \
   -v /sys/class/gpio:/sys/class/gpio \
+  -v /tmp:/tmp \
   --network host \
   robotem_rovne_docker bash
