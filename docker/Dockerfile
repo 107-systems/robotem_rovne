@@ -14,7 +14,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /tmp
+WORKDIR /opt
 
 RUN git clone --recursive --depth 1 https://github.com/Livox-SDK/Livox-SDK2.git && \
     mkdir -p Livox-SDK2/build && cd Livox-SDK2/build && \
@@ -38,17 +38,17 @@ RUN git clone --recursive --depth 1 https://github.com/fmtlib/fmt --branch 10.1.
 
 RUN git clone --recursive --depth 1 https://github.com/nlohmann/json --branch v3.11.3 && \
     mkdir -p json/build && cd json/build && \
-    cmake .. && make -j8 && \
+    cmake -DJSON_BuildTests=OFF .. && make -j8 && \
     sudo make install
 
-RUN mkdir -p /tmp/colcon_ws/src
-WORKDIR /tmp/colcon_ws/src
+RUN mkdir -p /home/fio/colcon_ws/src
+WORKDIR /home/fio/src
 
 RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24 && cd msas_enrich_2023 && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/t07_robot --branch elrob24 && cd t07_robot && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/pika-spark/pika-spark-bno085-driver --branch elrob24 && cd pika-spark-bno085-driver && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/robotem_rovne --branch elrob24 && cd robotem_rovne && git pull origin elrob24
 
-WORKDIR /tmp/colcon_ws
+WORKDIR /home/fio
 RUN . /opt/ros/humble/setup.sh && \
     colcon build --packages-select mandeye_unicorn t07_robot pika_spark_bno085_driver robotem_rovne --cmake-args -DCMAKE_BUILD_TYPE=Release
