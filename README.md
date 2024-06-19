@@ -20,4 +20,6 @@ colcon build --packages-select robotem_rovne
 cd $COLCON_WS
 . install/setup.bash
 ros2 run robotem_rovne robotem_rovne_node
+# or
+ros2 launch robotem_rovne all.py
 ```
