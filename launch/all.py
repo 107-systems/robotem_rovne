@@ -32,9 +32,24 @@ def generate_launch_description():
         ]
     )
 
+    mandeye_unicorn_node = Node(
+        package='mandeye_unicorn',
+        executable='mandeye_unicorn',
+        name='mandeye_unicorn',
+        namespace='',
+        output='screen',
+        emulate_tty=True,
+        parameters=[
+        ],
+        remappings=[
+            ('/cmd_vel', '/t07/cmd_vel'),
+        ]
+    )
+
     # Launch them all!
     return LaunchDescription([
         imu,
         t07_robot,
-        robotem_rovne_node
+        robotem_rovne_node,
+        mandeye_unicorn_node
     ])
