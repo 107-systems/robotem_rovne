@@ -41,14 +41,14 @@ RUN git clone --recursive --depth 1 https://github.com/nlohmann/json --branch v3
     cmake -DJSON_BuildTests=OFF .. && make -j8 && \
     sudo make install
 
-RUN mkdir -p /home/fio/colcon_ws/src
-WORKDIR /home/fio/src
+RUN mkdir -p /opt/colcon_ws/src
+WORKDIR /opt/colcon_ws/src
 
 RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24 && cd msas_enrich_2023 && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/t07_robot --branch elrob24 && cd t07_robot && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/pika-spark/pika-spark-bno085-driver --branch elrob24 && cd pika-spark-bno085-driver && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/robotem_rovne --branch elrob24 && cd robotem_rovne && git pull origin elrob24
 
-WORKDIR /home/fio
+WORKDIR /opt/colcon_ws
 RUN . /opt/ros/humble/setup.sh && \
     colcon build --packages-select mandeye_unicorn t07_robot pika_spark_bno085_driver robotem_rovne --cmake-args -DCMAKE_BUILD_TYPE=Release
