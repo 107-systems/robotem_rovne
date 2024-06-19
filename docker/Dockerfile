@@ -47,19 +47,10 @@ RUN git clone https://github.com/nlohmann/json && cd json && \
 RUN mkdir -p /tmp/colcon_ws/src
 WORKDIR /tmp/colcon_ws/src
 
-RUN git clone https://github.com/aentinger/msas_enrich_2023 && \
-    cd msas_enrich_2023 && \
-    git checkout elrob24
-
-RUN git clone --recursive https://github.com/107-systems/t07_robot && \
-    cd t07_robot && \
-    git checkout robotem-rovne
-
-RUN git clone --recursive https://github.com/pika-spark/pika-spark-bno085-driver && \
-    cd pika-spark-bno085-driver && \
-    git checkout robotem-rovne
-
-RUN git clone --recursive https://github.com/107-systems/robotem_rovne
+RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24
+RUN git clone --recursive --depth 1 https://github.com/107-systems/t07_robot --branch robotem-rovne
+RUN git clone --recursive --depth 1 https://github.com/pika-spark/pika-spark-bno085-driver --branch robotem-rovne
+RUN git clone --recursive --depth 1 https://github.com/107-systems/robotem_rovne
 
 WORKDIR /tmp/colcon_ws
 RUN . /opt/ros/humble/setup.sh && \
