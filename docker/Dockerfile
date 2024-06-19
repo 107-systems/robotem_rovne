@@ -10,6 +10,8 @@ RUN apt-get update && \
     freeglut3-dev \
     libeigen3-dev \
     libglu1-mesa-dev \
+    nmap \
+    inetutils-ping \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
