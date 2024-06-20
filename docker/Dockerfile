@@ -18,7 +18,7 @@ RUN apt-get update && \
 
 WORKDIR /opt
 
-RUN git clone --recursive --depth 1 https://github.com/Livox-SDK/Livox-SDK2.git && \
+RUN git clone --recursive --depth 1 https://github.com/aentinger/Livox-SDK2 --branch elrob24 && \
     mkdir -p Livox-SDK2/build && cd Livox-SDK2/build && \
     cmake .. && make install
 
