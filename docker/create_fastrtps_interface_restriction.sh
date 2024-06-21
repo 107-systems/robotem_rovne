@@ -32,6 +32,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
             <userTransports>
                 <transport_id>CustomUDPTransport</transport_id>
             </userTransports>
+            <useBuiltinTransports>false</useBuiltinTransports>
         </rtps>
     </participant>
 
@@ -40,6 +41,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
              <userTransports>
                  <transport_id>CustomTcpTransport</transport_id>
              </userTransports>
+             <useBuiltinTransports>false</useBuiltinTransports>
         </rtps>
     </participant>
 </profiles>" > /opt/colcon_ws/fastrtps_interface_restriction.xml
