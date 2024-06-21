@@ -188,14 +188,14 @@ void Node::ctrl_loop()
   motor_right_vel = std::max(motor_right_vel, motor_vel_lower_limit);
   motor_right_vel = std::min(motor_right_vel, motor_vel_upper_limit);
 
-  RCLCPP_INFO(get_logger(),
-              "actual = %0.2f, target = %0.2f, error = %0.2f, pid_res = %0.2f, LEFT = %0.2f m/s, RIGHT = %0.2f m/s",
-              _yaw_angular_vel_actual.numerical_value_in(deg/s),
-              _yaw_angular_vel_target.numerical_value_in(deg/s),
-              yaw_angular_vel_error.numerical_value_in(deg/s),
-              pid_res,
-              motor_left_vel.numerical_value_in(m/s),
-              motor_right_vel.numerical_value_in(m/s));
+  RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 20UL,
+                       "actual = %0.2f, target = %0.2f, error = %0.2f, pid_res = %0.2f, LEFT = %0.2f m/s, RIGHT = %0.2f m/s",
+                       _yaw_angular_vel_actual.numerical_value_in(deg/s),
+                       _yaw_angular_vel_target.numerical_value_in(deg/s),
+                       yaw_angular_vel_error.numerical_value_in(deg/s),
+                       pid_res,
+                       motor_left_vel.numerical_value_in(m/s),
+                       motor_right_vel.numerical_value_in(m/s));
 
   pub_motor_left (motor_left_vel);
   pub_motor_right(motor_right_vel);
