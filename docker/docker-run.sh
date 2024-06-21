@@ -49,9 +49,6 @@ echo $GPIO_NBOOT_NUM > /sys/class/gpio/export
 modprobe spidev
 chmod ugo+rw /dev/spidev0.0
 
-ifconfig eth0 down
-ifconfig eth0 192.168.1.5 netmask 255.255.255.0
-ifconfig eth0 up
 sudo -u fio ifconfig eth0
 
 docker run -it \
