@@ -48,7 +48,6 @@ RUN mkdir -p /opt/colcon_ws/src
 WORKDIR /opt/colcon_ws/src
 
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-ENV FASTRTPS_DEFAULT_PROFILES_FILE=/opt/colcon_ws/fastrtps_interface_restriction.xml
 
 RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24 && cd msas_enrich_2023 && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/t07_robot --branch elrob24 && cd t07_robot && git pull origin elrob24
