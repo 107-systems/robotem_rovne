@@ -4,6 +4,7 @@ IFS=$'\n\t'
 
 # Fast-DDS https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/whitelist.html
 # needs actual ip for this interface
+interface=wlan0
 ipinet="$(ip a s $interface | egrep -o 'inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')"
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
 <profiles xmlns=\"http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles\">
