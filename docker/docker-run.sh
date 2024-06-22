@@ -29,6 +29,8 @@ function finish
   echo $GPIO_NIRQ_NUM > /sys/class/gpio/unexport
   echo $GPIO_NRST_NUM > /sys/class/gpio/unexport
   echo $GPIO_NBOOT_NUM > /sys/class/gpio/unexport
+
+  ifconfig eth0 down
 }
 trap finish EXIT
 
@@ -40,6 +42,8 @@ ip link set $CAN type can bitrate $CAN_BITRATE
 ip link set $CAN up
 ifconfig $CAN txqueuelen 10
 
+ifconfig eth0 192.168.1.5 netmask 255.255.255.0
+ifconfig eth0 up
 sudo -u fio ifconfig $CAN
 
 echo $GPIO_NIRQ_NUM > /sys/class/gpio/export
