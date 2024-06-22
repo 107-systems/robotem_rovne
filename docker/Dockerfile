@@ -48,9 +48,6 @@ RUN git clone --recursive --depth 1 https://github.com/nlohmann/json --branch v3
 RUN mkdir -p /opt/colcon_ws/src
 WORKDIR /opt/colcon_ws/src
 
-ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-ENV FASTRTPS_DEFAULT_PROFILES_FILE=/opt/colcon_ws/fastrtps_interface_restriction.xml
-
 RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24 && cd msas_enrich_2023 && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/t07_robot --branch elrob24 && cd t07_robot && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/pika-spark/pika-spark-bno085-driver --branch elrob24 && cd pika-spark-bno085-driver && git pull origin elrob24
@@ -58,7 +55,9 @@ RUN git clone --recursive --depth 1 https://github.com/107-systems/robotem_rovne
 
 WORKDIR /opt/colcon_ws
 
-COPY init_fastrtps.sh /opt/colcon_ws
+COPY fastrtps-whitelist-wlan.xml /opt/colcon_ws
+ENV FASTRTPS_DEFAULT_PROFILES_FILE=/opt/colcon_ws/fastrtps-whitelist-wlan.xml
+ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 RUN . /opt/ros/humble/setup.sh && \
     colcon build --packages-select mandeye_unicorn t07_robot pika_spark_bno085_driver robotem_rovne --cmake-args -DCMAKE_BUILD_TYPE=Release
