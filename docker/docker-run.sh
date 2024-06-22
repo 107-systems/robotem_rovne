@@ -29,8 +29,6 @@ function finish
   echo $GPIO_NIRQ_NUM > /sys/class/gpio/unexport
   echo $GPIO_NRST_NUM > /sys/class/gpio/unexport
   echo $GPIO_NBOOT_NUM > /sys/class/gpio/unexport
-
-  sudo -u fio nmcli con down static
 }
 trap finish EXIT
 
@@ -51,7 +49,6 @@ echo $GPIO_NBOOT_NUM > /sys/class/gpio/export
 modprobe spidev
 chmod ugo+rw /dev/spidev0.0
 
-sudo -u fio nmcli con up static
 sudo -u fio ifconfig eth0
 
 docker run -it \
