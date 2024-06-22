@@ -45,9 +45,3 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
         </rtps>
     </participant>
 </profiles>" > /opt/colcon_ws/fastrtps_interface_restriction.xml
-
-# tell where to look
-export FASTRTPS_DEFAULT_PROFILES_FILE=/opt/colcon_ws/fastrtps_interface_restriction.xml
-
-# we probably do not want to limit to localhost
-unset ROS_LOCALHOST_ONLY

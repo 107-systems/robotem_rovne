@@ -13,6 +13,7 @@ RUN apt-get update && \
     nmap \
     inetutils-ping \
     iproute2 \
+    net-tools \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -48,6 +49,7 @@ RUN mkdir -p /opt/colcon_ws/src
 WORKDIR /opt/colcon_ws/src
 
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+ENV FASTRTPS_DEFAULT_PROFILES_FILE=/opt/colcon_ws/fastrtps_interface_restriction.xml
 
 RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24 && cd msas_enrich_2023 && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/t07_robot --branch elrob24 && cd t07_robot && git pull origin elrob24
@@ -56,7 +58,7 @@ RUN git clone --recursive --depth 1 https://github.com/107-systems/robotem_rovne
 
 WORKDIR /opt/colcon_ws
 
-COPY create_fastrtps_interface_restriction.sh /opt/colcon_ws
+COPY init_fastrtps.sh /opt/colcon_ws
 
 RUN . /opt/ros/humble/setup.sh && \
     colcon build --packages-select mandeye_unicorn t07_robot pika_spark_bno085_driver robotem_rovne --cmake-args -DCMAKE_BUILD_TYPE=Release
