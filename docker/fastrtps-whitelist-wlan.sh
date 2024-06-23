@@ -18,7 +18,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
         </transport_descriptor>
 
         <transport_descriptor>
-            <transport_id>CustomTcpTransport</transport_id>
+            <transport_id>CustomTCPTransport</transport_id>
             <type>TCPv4</type>
             <interfaceWhiteList>
                 <address>${ipinet##inet }</address>
@@ -27,21 +27,14 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
 
     </transport_descriptors>
 
-    <participant profile_name=\"CustomUDPTransportParticipant\" is_default_profile=\"true\">
+    <participant profile_name=\"CustomTransportParticipant\" is_default_profile=\"true\">
         <rtps>
             <userTransports>
                 <transport_id>CustomUDPTransport</transport_id>
+                <transport_id>CustomTCPTransport</transport_id>
             </userTransports>
             <useBuiltinTransports>false</useBuiltinTransports>
         </rtps>
     </participant>
 
-    <participant profile_name=\"CustomTcpTransportParticipant\" is_default_profile=\"true\">
-        <rtps>
-             <userTransports>
-                 <transport_id>CustomTcpTransport</transport_id>
-             </userTransports>
-             <useBuiltinTransports>false</useBuiltinTransports>
-        </rtps>
-    </participant>
 </profiles>" > fastrtps-whitelist-wlan.xml

@@ -14,6 +14,7 @@ RUN apt-get update && \
     inetutils-ping \
     iproute2 \
     net-tools \
+    ifmetric \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
