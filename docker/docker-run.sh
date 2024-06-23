@@ -41,9 +41,6 @@ echo 0 > /sys/class/gpio/gpio$GPIO_CAN0_STBY/value
 ip link set $CAN type can bitrate $CAN_BITRATE
 ip link set $CAN up
 ifconfig $CAN txqueuelen 10
-
-ifconfig eth0 192.168.1.5 netmask 255.255.255.0
-ifconfig eth0 up
 sudo -u fio ifconfig $CAN
 
 echo $GPIO_NIRQ_NUM > /sys/class/gpio/export
@@ -53,7 +50,11 @@ echo $GPIO_NBOOT_NUM > /sys/class/gpio/export
 modprobe spidev
 chmod ugo+rw /dev/spidev0.0
 
+ifconfig eth0 192.168.1.5 netmask 255.255.255.0
+ifconfig eth0 up
 sudo -u fio ifconfig eth0
+
+sudo -u fio ifconfig wlan0
 
 docker run -it \
   --ulimit nofile=1024:1024 \
