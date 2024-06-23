@@ -55,7 +55,7 @@ RUN git clone --recursive --depth 1 https://github.com/107-systems/robotem_rovne
 
 WORKDIR /opt/colcon_ws
 
-COPY fastrtps-whitelist-wlan.xml /opt/colcon_ws
+COPY fastrtps-whitelist-wlan.sh /opt/colcon_ws
 ENV FASTRTPS_DEFAULT_PROFILES_FILE=/opt/colcon_ws/fastrtps-whitelist-wlan.xml
 ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
