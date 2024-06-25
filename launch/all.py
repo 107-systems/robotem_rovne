@@ -18,7 +18,7 @@ def generate_launch_description():
 
     pkg_t07_robot = get_package_share_directory('t07_robot')
     t07_robot = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(pkg_t07_robot, 'launch', 't07_4wd.py'))
+        PythonLaunchDescriptionSource(os.path.join(pkg_t07_robot, 'launch', 't07_tracked.py'))
     )
 
     robotem_rovne_node = Node(
