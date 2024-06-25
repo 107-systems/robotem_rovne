@@ -49,7 +49,7 @@ RUN git clone --recursive --depth 1 https://github.com/nlohmann/json --branch v3
 RUN mkdir -p /opt/colcon_ws/src
 WORKDIR /opt/colcon_ws/src
 
-RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24 && cd msas_enrich_2023 && git pull origin elrob24
+RUN git clone --recursive --depth 1 https://github.com/aentinger/msas_enrich_2023 --branch elrob24-tracked && cd msas_enrich_2023 && git pull origin elrob24-tracked
 RUN git clone --recursive --depth 1 https://github.com/107-systems/t07_robot --branch elrob24 && cd t07_robot && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/pika-spark/pika-spark-bno085-driver --branch elrob24 && cd pika-spark-bno085-driver && git pull origin elrob24
 RUN git clone --recursive --depth 1 https://github.com/107-systems/robotem_rovne --branch elrob24-tracked && cd robotem_rovne && git pull origin elrob24-tracked
